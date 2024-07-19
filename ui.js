@@ -145,6 +145,8 @@ function solveAndDisplay(){
     solveCube();
 
     // Solution to the scramble
+    var edgeCyclesLength = edge_cycles.length;
+    var cornerCyclesLength = corner_cycles.length;
     var solution = '';
     var edges_solution = '';
     var corners_solution = '';
@@ -158,11 +160,11 @@ function solveAndDisplay(){
         solution += '<br><br>';
     }
 
+    // TODO: Indicate when this is being done for both edges and corners
+
     // Add flipped edges as edge cycles
     if ( edge_style == OP ) {
         for (var i=0; i<flipped_edges.length; i++){
-            // Disregard buffer
-            if ( flipped_edges[i] == 1 ) continue;
             for (var j = 0; j<12; j++) {
                 if ( edge_cubies[j][0] == flipped_edges[i] ) {
                     // To flip an edge, append the cycle given by both stickers of that edge
@@ -177,8 +179,15 @@ function solveAndDisplay(){
     if ( edge_cycles.length != 0 || flipped_edges.length != 0 ) {
         solution += "// Edges <br>";
         for (var i=0; i<edge_cycles.length; i++){
+            if (i >= edgeCyclesLength && (i - edgeCyclesLength) % 2 == 0) {
+                solution += "// Flip " + letter_pairs[edge_cycles[i]] + "<br>";
+                if (edgeCyclesLength != 0 || i != 0) {
+                    edge_pairs += "<br>";
+                }
+                edge_pairs += "<b>Flip " + letter_pairs[edge_cycles[i]] + "&nbsp;&nbsp;</b>";
+            }
             edge_pairs += letter_pairs[edge_cycles[i]];
-            if ( i%2==1 ){
+            if ( i%2==1 && i < edgeCyclesLength ){
                 edge_pairs += " ";
             }
 
@@ -243,8 +252,6 @@ function solveAndDisplay(){
     // Add flipped corners as corner cycles
     if ( corner_style == OP ) {
         for (var i=0; i<cw_corners.length; i++){
-            // Disregard buffer
-            if ( cw_corners[i] == 0 ) continue;
             for (var j = 0; j<8; j++) {
                 if ( corner_cubies[j][0] == cw_corners[i] ) {
                     // To rotate a corner, append the cycle given by two CW stickers of that corner
@@ -269,8 +276,15 @@ function solveAndDisplay(){
     if ( corner_cycles.length != 0 || cw_corners.length != 0 || ccw_corners.length != 0 ) {
         solution += "// Corners <br>";
         for (var i=0; i<corner_cycles.length; i++){
+            if (i >= cornerCyclesLength && (i - cornerCyclesLength) % 2 == 0) {
+                solution += "// Rotate " + letter_pairs[corner_cycles[i]] + "<br>";
+                if (cornerCyclesLength != 0 || i != 0) {
+                    corner_pairs += "<br>";
+                }
+                corner_pairs += "<b>Rotate " + letter_pairs[corner_cycles[i]] + "&nbsp;&nbsp;</b>";
+            }
             corner_pairs += letter_pairs[corner_cycles[i]];
-            if ( i%2==1 ){
+            if ( i%2==1 && i < cornerCyclesLength ){
                 corner_pairs += " ";
             }
 

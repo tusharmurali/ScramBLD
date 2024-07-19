@@ -1697,7 +1697,7 @@ function edgesSolved (){
             // Edge is solved but miss-oriented
             else if ( edges[edge_cubies[i][0]] == edge_cubies[i][1] && edges[edge_cubies[i][1]] == edge_cubies[i][0] ){
                 solved_edges[i] = true;
-                if (i != 0){
+                if (i != BC){
                     flipped_edges.push(edge_cubies[i][0]);
                 }
             }
