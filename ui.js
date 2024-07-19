@@ -3,7 +3,11 @@ var letter_pairs = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O",
 // Binds events
 function initUI(){
     $('#go').click( solveAndDisplay );
-    $('#scramble').keyup( solveAndDisplay );
+    $('#scramble').keyup(function () {
+        var scramble = $(this).val().trim();
+        localStorage.setItem('scramble', scramble); // Update localStorage with new scramble
+        solveAndDisplay();
+    });
 
     // Solving style options
     $('#op-corners').click(function(){
@@ -75,6 +79,16 @@ function initUI(){
     initCubeCanvas('cube_canvas');
     renderCube();
 
+    // If a scramble param is found in the URL, it is applied to the cube and solved
+    // Otherwise, load scramble from localStorage if no scramble param in URL
+    if ( !applyUrlScramble() ) {
+        var savedScramble = localStorage.getItem('scramble');
+        if (savedScramble) {
+            $('#scramble').val(savedScramble);
+            solveAndDisplay();
+        }
+    }
+
     // Load corner style preference from localStorage
     var savedCornerStyle = localStorage.getItem('corner_style');
     if (savedCornerStyle === 'OP') {
@@ -92,9 +106,6 @@ function initUI(){
     } else if (savedEdgeStyle === 'BH') {
         $('#3style-edges').click();
     }
-
-    // If a scramble param is found in the URL, it is applied to the cube and solved
-    applyUrlScramble();
 }
 
 // Figures out a solution for the cube and displays it
@@ -334,9 +345,12 @@ function applyUrlScramble(){
         if (param[0] == 'scramble') {
             var scramble = param[1].replace(/_/g," ").replace(/-/g,"'");
             $('#scramble').val(scramble);
+            localStorage.setItem('scramble', scramble);
             solveAndDisplay();
+            return true;
         }
     }
+    return false;
 }
 
 // Adds scramble to url as a param
