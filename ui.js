@@ -8,18 +8,21 @@ function initUI(){
     // Solving style options
     $('#op-corners').click(function(){
         corner_style = OP;
+        localStorage.setItem('corner_style', 'OP');
         $('#op-corners').addClass('active-btn').removeClass('inactive-btn');
         $('#3style-corners').addClass('inactive-btn').removeClass('active-btn');
         solveAndDisplay();
     });
     $('#3style-corners').click(function(){
         corner_style = BH;
+        localStorage.setItem('corner_style', 'BH');
         $('#op-corners').addClass('inactive-btn').removeClass('active-btn');
         $('#3style-corners').addClass('active-btn').removeClass('inactive-btn');
         solveAndDisplay();
     });
     $('#op-edges').click(function(){
         edge_style = OP;
+        localStorage.setItem('edge_style', 'OP');
         $('#op-edges').addClass('active-btn').removeClass('inactive-btn');
         $('#m2-edges').addClass('inactive-btn').removeClass('active-btn');
         $('#3style-edges').addClass('inactive-btn').removeClass('active-btn');
@@ -27,6 +30,7 @@ function initUI(){
     });
     $('#m2-edges').click(function(){
         edge_style = M2;
+        localStorage.setItem('edge_style', 'M2');
         $('#op-edges').addClass('inactive-btn').removeClass('active-btn');
         $('#m2-edges').addClass('active-btn').removeClass('inactive-btn');
         $('#3style-edges').addClass('inactive-btn').removeClass('active-btn');
@@ -34,6 +38,7 @@ function initUI(){
     });
     $('#3style-edges').click(function(){
         edge_style = BH;
+        localStorage.setItem('edge_style', 'BH');
         $('#op-edges').addClass('inactive-btn').removeClass('active-btn');
         $('#m2-edges').addClass('inactive-btn').removeClass('active-btn');
         $('#3style-edges').addClass('active-btn').removeClass('inactive-btn');
@@ -69,6 +74,24 @@ function initUI(){
     initCube();
     initCubeCanvas('cube_canvas');
     renderCube();
+
+    // Load corner style preference from localStorage
+    var savedCornerStyle = localStorage.getItem('corner_style');
+    if (savedCornerStyle === 'OP') {
+        $('#op-corners').click();
+    } else if (savedCornerStyle === 'BH') {
+        $('#3style-corners').click();
+    }
+
+    // Load edge style preference from localStorage
+    var savedEdgeStyle = localStorage.getItem('edge_style');
+    if (savedEdgeStyle === 'OP') {
+        $('#op-edges').click();
+    } else if (savedEdgeStyle === 'M2') {
+        $('#m2-edges').click();
+    } else if (savedEdgeStyle === 'BH') {
+        $('#3style-edges').click();
+    }
 
     // If a scramble param is found in the URL, it is applied to the cube and solved
     applyUrlScramble();
