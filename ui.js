@@ -260,8 +260,6 @@ function solveAndDisplay(){
             }
         }
         for (var i=0; i<ccw_corners.length; i++){
-            // Disregard buffer
-            if ( ccw_corners[i] == 0 ) continue;
             for (var j = 0; j<8; j++) {
                 if ( corner_cubies[j][0] == ccw_corners[i] ) {
                     // To rotate a corner, append the cycle given by two CCW stickers of that corner
@@ -277,11 +275,12 @@ function solveAndDisplay(){
         solution += "// Corners <br>";
         for (var i=0; i<corner_cycles.length; i++){
             if (i >= cornerCyclesLength && (i - cornerCyclesLength) % 2 == 0) {
-                solution += "// Rotate " + letter_pairs[corner_cycles[i]] + "<br>";
+                solution += "// Twist " + letter_pairs[corner_cycles[i]] + "<br>";
                 if (cornerCyclesLength != 0 || i != 0) {
                     corner_pairs += "<br>";
                 }
-                corner_pairs += "<b>Rotate " + letter_pairs[corner_cycles[i]] + "&nbsp;&nbsp;</b>";
+                corner_pairs += "<b>Twist " + (i < cornerCyclesLength + cw_corners.length * 2 ? "Clockwise " : "Counterclockwise ")
+                    + letter_pairs[corner_cycles[i]] + "&nbsp;&nbsp;</b>";
             }
             corner_pairs += letter_pairs[corner_cycles[i]];
             if ( i%2==1 && i < cornerCyclesLength ){
