@@ -127,6 +127,8 @@ function solveAndDisplay(){
     // Add flipped edges as edge cycles
     if ( edge_style == OP ) {
         for (var i=0; i<flipped_edges.length; i++){
+            // Disregard buffer
+            if ( flipped_edges[i] == 1 ) continue;
             for (var j = 0; j<12; j++) {
                 if ( edge_cubies[j][0] == flipped_edges[i] ) {
                     // To flip an edge, append the cycle given by both stickers of that edge
@@ -207,6 +209,8 @@ function solveAndDisplay(){
     // Add flipped corners as corner cycles
     if ( corner_style == OP ) {
         for (var i=0; i<cw_corners.length; i++){
+            // Disregard buffer
+            if ( cw_corners[i] == 0 ) continue;
             for (var j = 0; j<8; j++) {
                 if ( corner_cubies[j][0] == cw_corners[i] ) {
                     // To rotate a corner, append the cycle given by two CW stickers of that corner
@@ -215,6 +219,8 @@ function solveAndDisplay(){
             }
         }
         for (var i=0; i<ccw_corners.length; i++){
+            // Disregard buffer
+            if ( ccw_corners[i] == 0 ) continue;
             for (var j = 0; j<8; j++) {
                 if ( corner_cubies[j][0] == ccw_corners[i] ) {
                     // To rotate a corner, append the cycle given by two CCW stickers of that corner
