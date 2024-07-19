@@ -167,6 +167,40 @@ op_setups[X] = "D F'";
 // Y perm used for OP corners
 var y_perm = "R U' R' U' R U R' F' R U R' U' R' F R";
 
+// Ra perm used for OP parity
+var ra_perm = "R U R' F' R U2 R' U2 R' F R U R U2 R' U'";
+
+// OP setup moves for edges, buffer at B/M
+var op_setups_edges = {};
+op_setups_edges[A] = "l2 D' L2";
+op_setups_edges[C] = "l2 D L2";
+op_setups_edges[D] = "";
+op_setups_edges[E] = "L' d L'";
+op_setups_edges[F] = "d' L";
+op_setups_edges[G] = "L d L'";
+op_setups_edges[H] = "d L'";
+op_setups_edges[I] = "l D' L2";
+op_setups_edges[J] = "d2 L";
+op_setups_edges[K] = "l D L2";
+op_setups_edges[L] = "L'";
+op_setups_edges[N] = "d L";
+op_setups_edges[O] = "D' l D L2";
+op_setups_edges[P] = "d' L'";
+op_setups_edges[Q] = "l' D L2";
+op_setups_edges[R] = "L";
+op_setups_edges[S] = "l' D' L2";
+op_setups_edges[T] = "d2 L'";
+op_setups_edges[U] = "D' L2";
+op_setups_edges[V] = "D2 L2";
+op_setups_edges[W] = "D L2";
+op_setups_edges[X] = "L2";
+
+// T perm used for OP edges
+var t_perm = "R U R' U' R' F R2 U' R' U' R U R' F'";
+
+
+
+
 // Edge flip setups
 var edge_flip_setups = {};
 edge_flip_setups[A] = "U2";
@@ -1556,7 +1590,7 @@ function solveEdges(){
     flipped_edges = [];
 
     // Parity is solved by swapping UL and UB
-    if ( corner_cycles.length%2 == 1 ){
+    if ( edge_style != OP && corner_cycles.length%2 == 1 ){
         var UB = -1;
         var UL = -1;
 
@@ -1593,21 +1627,25 @@ function solveEdges(){
     }
 }
 
+// Buffer cubie number, uses first sticked of the cubie
 // Replaces the edge buffer with another edge
 function cycleEdgeBuffer(){
     var edge_cycled = false;
 
+    // Index of the cubie of the edge buffer (in edge_cubies array)
+    var BC = edge_style == OP ? 2 : 0;
+
     // If the buffer is solved, replace it with an unsolved edge
-    if ( solved_edges[0] ){
+    if ( solved_edges[BC] ){
         // First unsolved edge is selected
-        for (var i=1; i<12 && !edge_cycled; i++){
-            if ( !solved_edges[i] ){
+        for (var i=0;  i<12 && !edge_cycled; i++){
+            if ( !solved_edges[i] && i !== BC ){
                 // Buffer is placed in a... um... buffer
-                var temp_edge = [edges[edge_cubies[0][0]], edges[edge_cubies[0][1]]];
+                var temp_edge = [edges[edge_cubies[BC][0]], edges[edge_cubies[BC][1]]];
 
                 // Buffer edge is replaced with edge
-                edges[edge_cubies[0][0]] = edges[edge_cubies[i][0]];
-                edges[edge_cubies[0][1]] = edges[edge_cubies[i][1]];
+                edges[edge_cubies[BC][0]] = edges[edge_cubies[i][0]];
+                edges[edge_cubies[BC][1]] = edges[edge_cubies[i][1]];
 
                 // Edge is replaced with buffer
                 edges[edge_cubies[i][0]] = temp_edge[0];
@@ -1623,10 +1661,10 @@ function cycleEdgeBuffer(){
     else {
         for (var i=0; i<12 && !edge_cycled; i++){
             for (var j=0; j<2 && !edge_cycled; j++){
-                if ( edges[edge_cubies[0][0]] == edge_cubies[i][j%2] && edges[edge_cubies[0][1]] == edge_cubies[i][(j+1)%2] ){
+                if ( edges[edge_cubies[BC][0]] == edge_cubies[i][j%2] && edges[edge_cubies[BC][1]] == edge_cubies[i][(j+1)%2] ){
                     // Buffer edge is replaced with edge
-                    edges[edge_cubies[0][0]] = edges[edge_cubies[i][j%2]];
-                    edges[edge_cubies[0][1]] = edges[edge_cubies[i][(j+1)%2]];
+                    edges[edge_cubies[BC][0]] = edges[edge_cubies[i][j%2]];
+                    edges[edge_cubies[BC][1]] = edges[edge_cubies[i][(j+1)%2]];
 
                     // Edge is solved
                     edges[edge_cubies[i][0]] = edge_cubies[i][0];
@@ -1646,9 +1684,12 @@ function cycleEdgeBuffer(){
 function edgesSolved (){
     var edges_solved = true;
 
-    // Check if corners marked as unsolved haven't been solved yet
+    // Index of the cubie of the edge buffer (in edge_cubies array)
+    var BC = edge_style == OP ? 2 : 0;
+
+    // Check if edges marked as unsolved haven't been solved yet
     for (var i=0; i<12; i++){
-        if ( i==0 || !solved_edges[i] ){
+        if ( i==BC || !solved_edges[i] ){
             // Edge is solved in correct orientation
             if ( edges[edge_cubies[i][0]] == edge_cubies[i][0] && edges[edge_cubies[i][1]] == edge_cubies[i][1] ) {
                 solved_edges[i] = true;
