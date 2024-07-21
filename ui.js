@@ -160,8 +160,6 @@ function solveAndDisplay(){
         solution += '<br><br>';
     }
 
-    // TODO: Indicate when this is being done for both edges and corners
-
     // Add flipped edges as edge cycles
     if ( edge_style == OP ) {
         for (var i=0; i<flipped_edges.length; i++){
